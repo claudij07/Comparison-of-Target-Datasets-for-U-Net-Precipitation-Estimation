@@ -43,17 +43,22 @@ def decoder_block(input, skip_features, num_filters):
 
 # U-net architecture: 
 inp = keras.layers.Input(shape=(128, 128, 1))
-s1,p1 = encoder_block(inp, 32)
+s1,p1 = encoder_block(inp, 8)
 BatchNormalization()
-s2,p2 = encoder_block(p1, 64)
+s2,p2 = encoder_block(p1, 16)
 BatchNormalization()
-b1 = conv_block(p2, 128)
+s3,p3 = encoder_block(p2, 32)
 BatchNormalization()
-d1 = decoder_block(b1, s2, 64)
+b1 = conv_block(p3, 64)
 BatchNormalization()
-d2 = decoder_block(d1, s1, 32)
+d1 = decoder_block(b1, s3, 32)
 BatchNormalization()
-output = keras.layers.Conv2D(1, kernel_size=5, padding="same", activation='relu')(d2)
+d2 = decoder_block(d1, s2, 16)
+BatchNormalization()
+d3 = decoder_block(d2, s1, 8)
+BatchNormalization()
+output = keras.layers.Conv2D(1, kernel_size=3, padding="same", activation='relu')(d3)
+
 
 # We load the trained model and all the weights into memory and we prediction
 callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
