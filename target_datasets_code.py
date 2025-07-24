@@ -65,5 +65,5 @@ lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0
 # Train the model:
 print(new_model.summary())
 new_model.fit(train_images,train_true, validation_data=(valid_images,valid_true),epochs=75, batch_size=BATCH_SIZE_VALUE, callbacks=[early_stop, lr_scheduler])
-model.save('PATH_TO_SAVE/model.keras')
+new_model.save('PATH_TO_SAVE/model.keras')
 
